@@ -2022,6 +2022,7 @@ ZEND_API void zend_initialize_class_data(zend_class_entry *ce, bool nullify_hand
 		ce->constructor = NULL;
 		ce->destructor = NULL;
 		ce->clone = NULL;
+		ce->__static_construct = NULL;
 		ce->__get = NULL;
 		ce->__set = NULL;
 		ce->__unset = NULL;

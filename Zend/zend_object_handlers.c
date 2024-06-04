@@ -1548,6 +1548,35 @@ ZEND_API zend_function *zend_std_get_static_method(zend_class_entry *ce, zend_st
 }
 /* }}} */
 
+static void call_static_constructor(zend_class_entry *ce)
+{
+	if (!ce->__static_construct) {
+		return;
+	}
+
+	zend_fcall_info fci;
+    zend_fcall_info_cache fci_cache;
+	zval retval;
+
+	fci.object = NULL;
+	fci.retval = &retval;
+	fci.param_count = 0;
+	fci.params = NULL;
+	fci.named_params = NULL;
+	ZVAL_UNDEF(&fci.function_name);
+	fci.size = sizeof(fci);
+
+	fci_cache.function_handler = ce->__static_construct;
+	fci_cache.called_scope = ce;
+	fci_cache.object = NULL;
+
+	if (zend_call_function(&fci, &fci_cache) == SUCCESS) {
+		if (!Z_ISUNDEF(retval)) {
+			zval_ptr_dtor(&retval);
+		}
+	}
+}
+
 ZEND_API void zend_class_init_statics(zend_class_entry *class_type) /* {{{ */
 {
 	int i;
@@ -1569,6 +1598,8 @@ ZEND_API void zend_class_init_statics(zend_class_entry *class_type) /* {{{ */
 				ZVAL_COPY_OR_DUP(&CE_STATIC_MEMBERS(class_type)[i], p);
 			}
 		}
+
+		call_static_constructor(class_type);
 	}
 } /* }}} */
 

@@ -2686,6 +2686,24 @@ static void zend_check_magic_method_no_return_type(
 	}
 }
 
+static void zend_check_static_constructor_constraints (
+		const zend_class_entry *ce, const zend_function *fptr, int error_type)
+{
+
+	if (!(fptr->common.fn_flags & ZEND_ACC_PRIVATE)) {
+		zend_error_noreturn(error_type, "The magic method %s::%s() must have private visibility",
+			ZSTR_VAL(ce->name), ZSTR_VAL(fptr->common.function_name));
+	}
+
+	if (!(fptr->common.fn_flags & ZEND_ACC_STATIC)) {
+		zend_error_noreturn(error_type, "Method %s::%s() must be static",
+			ZSTR_VAL(ce->name), ZSTR_VAL(fptr->common.function_name));
+	}
+
+	zend_check_magic_method_args(0, ce, fptr, error_type);
+	zend_check_magic_method_return_type(ce, fptr, error_type, MAY_BE_VOID);
+}
+
 ZEND_API void zend_check_magic_method_implementation(const zend_class_entry *ce, const zend_function *fptr, zend_string *lcname, int error_type) /* {{{ */
 {
 	if (ZSTR_VAL(fptr->common.function_name)[0] != '_'
@@ -2696,6 +2714,8 @@ ZEND_API void zend_check_magic_method_implementation(const zend_class_entry *ce,
 	if (zend_string_equals_literal(lcname, ZEND_CONSTRUCTOR_FUNC_NAME)) {
 		zend_check_magic_method_non_static(ce, fptr, error_type);
 		zend_check_magic_method_no_return_type(ce, fptr, error_type);
+	} else if (zend_string_equals_literal(lcname, ZEND_STATIC_CONSTRUCTOR_FUNC_NAME)) {
+		zend_check_static_constructor_constraints(ce, fptr, error_type);
 	} else if (zend_string_equals_literal(lcname, ZEND_DESTRUCTOR_FUNC_NAME)) {
 		zend_check_magic_method_args(0, ce, fptr, error_type);
 		zend_check_magic_method_non_static(ce, fptr, error_type);
@@ -2792,6 +2812,8 @@ ZEND_API void zend_add_magic_method(zend_class_entry *ce, zend_function *fptr, z
 	} else if (zend_string_equals_literal(lcname, ZEND_CONSTRUCTOR_FUNC_NAME)) {
 		ce->constructor = fptr;
 		ce->constructor->common.fn_flags |= ZEND_ACC_CTOR;
+	} else if (zend_string_equals_literal(lcname, ZEND_STATIC_CONSTRUCTOR_FUNC_NAME)) {
+		ce->__static_construct = fptr;
 	} else if (zend_string_equals_literal(lcname, ZEND_DESTRUCTOR_FUNC_NAME)) {
 		ce->destructor = fptr;
 	} else if (zend_string_equals_literal(lcname, ZEND_GET_FUNC_NAME)) {

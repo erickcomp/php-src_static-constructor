@@ -1161,18 +1161,19 @@ static zend_always_inline bool zend_check_arg_send_type(const zend_function *zf,
 
 END_EXTERN_C()
 
-#define ZEND_CLONE_FUNC_NAME		"__clone"
-#define ZEND_CONSTRUCTOR_FUNC_NAME	"__construct"
-#define ZEND_DESTRUCTOR_FUNC_NAME	"__destruct"
-#define ZEND_GET_FUNC_NAME          "__get"
-#define ZEND_SET_FUNC_NAME          "__set"
-#define ZEND_UNSET_FUNC_NAME        "__unset"
-#define ZEND_ISSET_FUNC_NAME        "__isset"
-#define ZEND_CALL_FUNC_NAME         "__call"
-#define ZEND_CALLSTATIC_FUNC_NAME   "__callstatic"
-#define ZEND_TOSTRING_FUNC_NAME     "__tostring"
-#define ZEND_INVOKE_FUNC_NAME       "__invoke"
-#define ZEND_DEBUGINFO_FUNC_NAME    "__debuginfo"
+#define ZEND_CLONE_FUNC_NAME		        "__clone"
+#define ZEND_CONSTRUCTOR_FUNC_NAME	        "__construct"
+#define ZEND_STATIC_CONSTRUCTOR_FUNC_NAME	"__static_construct"
+#define ZEND_DESTRUCTOR_FUNC_NAME	        "__destruct"
+#define ZEND_GET_FUNC_NAME                  "__get"
+#define ZEND_SET_FUNC_NAME                  "__set"
+#define ZEND_UNSET_FUNC_NAME                "__unset"
+#define ZEND_ISSET_FUNC_NAME                "__isset"
+#define ZEND_CALL_FUNC_NAME                 "__call"
+#define ZEND_CALLSTATIC_FUNC_NAME           "__callstatic"
+#define ZEND_TOSTRING_FUNC_NAME             "__tostring"
+#define ZEND_INVOKE_FUNC_NAME               "__invoke"
+#define ZEND_DEBUGINFO_FUNC_NAME            "__debuginfo"
 
 /* The following constants may be combined in CG(compiler_options)
  * to change the default compiler behavior */

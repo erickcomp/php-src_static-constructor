@@ -173,6 +173,7 @@ struct _zend_class_entry {
 	zend_function *destructor;
 	zend_function *clone;
 	zend_function *__get;
+	zend_function *__static_construct;
 	zend_function *__set;
 	zend_function *__unset;
 	zend_function *__isset;
